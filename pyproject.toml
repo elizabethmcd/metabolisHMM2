@@ -8,10 +8,8 @@ readme = "README.md"
 requires-python = ">=3.8"
 dependencies = [
     "biopython",
-    "pandas",
-    "numpy",
     "ruff>=0.6.2",
-    "click"
+    "click",
 ]
 
 [build-system]

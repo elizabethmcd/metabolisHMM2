@@ -7,26 +7,43 @@ from Bio import SearchIO
 
 def single_marker_search(input_dir, output_dir, marker_dir, threads):
     """Run single marker search on a directory of genomes."""
+    input_dir = Path(input_dir)
+    output_dir = Path(output_dir)
+    marker_dir = Path(marker_dir)
+
+    print("Checking dependencies...")
     check_dependencies()
+    print("Creating output directory...")
     create_directory(output_dir)
 
-    genomes = list(Path(input_dir).glob("*.fasta"))
-    markers = list(Path(marker_dir).glob("*.hmm"))
-    output_dir.mkdir(parents=True, exist_ok=True)
+    genomes = list(input_dir.glob("*.fasta"))
+    markers = list(marker_dir.glob("*.hmm"))
+
+    print(f"Processing {len(genomes)} genomes with {len(markers)} markers")
 
     with ProcessPoolExecutor(max_workers=threads) as executor:
-        futures = [executor.submit(process_genome, genome, output_dir, markers) for genome in genomes]
+        futures = [executor.submit(process_genome, str(genome), str(output_dir), [str(m) for m in markers]) for genome in genomes]
         for future in as_completed(futures):
-            future.result()
+            try:
+                future.result()  # This will raise an exception if the task failed
+            except Exception as e:
+                print(f"An error occurred: {e}")
+
+    print("All genomes processed")
 
 def process_genome(genome, output_dir, markers):
     """Process a single genome with a list of markers."""
-    genome_name = genome.stem
+    print(f"Processing genome: {genome}")
+    genome_name = Path(genome).stem
+    output_dir = Path(output_dir)
     # get proteins
+    print("Running Prodigal...")
     protein_file = run_prodigal(genome, output_dir, genome_name)
     # Run hmmsearch for each marker
     for marker in markers:
+        print(f"Running hmmsearch for marker: {marker}")
         run_hmmsearch(protein_file, marker, output_dir, genome_name)
+    print(f"Finished processing genome: {genome}")
 
 def run_prodigal(genome, output_dir, genome_name):
     """Run Prodigal on a genome file and store the results in the output directory."""

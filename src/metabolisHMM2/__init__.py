@@ -1,1 +1,1 @@
-from metabolisHMM2 import single_marker_search
+from metabolisHMM2 import single_marker_search as single_marker_search
