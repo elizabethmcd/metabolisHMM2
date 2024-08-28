@@ -1,0 +1,22 @@
+[project]
+name = "metabolisHMM2"
+version = "0.1.0"
+description = "Exploring genome annotations and phylogenies with HMM markers."
+authors = [{name = "Elizabeth McDaniel", email = "elizabethmcd93@gmail.com"}]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "biopython",
+    "pandas",
+    "numpy",
+    "ruff>=0.6.2",
+    "click"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+metabolisHMM = "metabolisHMM2.cli:cli"
