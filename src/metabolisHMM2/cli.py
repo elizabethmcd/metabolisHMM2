@@ -20,13 +20,8 @@ def run_single_marker_search_command(input_dir, output_dir, markers_dir, threads
     click.echo(f"Debug: threads={threads}")
     
     click.echo("Debug: About to call single_marker_search function")
-    try:
-        run_single_marker_search(input_dir, output_dir, markers_dir, threads)
-        click.echo("Debug: marker-search completed successfully")
-    except Exception as e:
-        click.echo(f"Debug: Exception occurred: {str(e)}")
-        click.echo("Debug: marker-search function failed")
-        raise
+    run_single_marker_search(input_dir, output_dir, markers_dir, threads)
+    click.echo("Debug: marker-search completed successfully")
 
 if __name__ == '__main__':
     cli()

@@ -28,6 +28,7 @@ def single_marker_search(input_dir, output_dir, marker_dir, threads):
                 future.result()  # This will raise an exception if the task failed
             except Exception as e:
                 print(f"An error occurred: {e}")
+                raise  # Re-raise the exception to stop execution
 
     print("All genomes processed")
 
@@ -60,7 +61,7 @@ def run_prodigal(genome, output_dir, genome_name):
 
 def run_hmmsearch(protein_file, marker, output_dir, genome_name):
     """Run hmmsearch on a protein file and store the results in the output directory."""
-    marker_name = marker.stem
+    marker_name = Path(marker).stem
     output_file = Path(output_dir) / f"{genome_name}_{marker_name}.out"
     command = [
         'hmmsearch',
